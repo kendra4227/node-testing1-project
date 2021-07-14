@@ -42,12 +42,14 @@ function trimPropertiesMutation(obj) {
  * EXAMPLE
  * findLargestInteger([{ integer: 1 }, { integer: 3 }, { integer: 2 }]) // returns 3
  */
-function findLargestInteger(integers) {
+ function findLargestInteger(integers) {
   // ✨ implement
-  const largestInt = integers.reduce((highNum, currentNumObj) => {
-    return Math.max(highNum, currentNumObj.integer);
-  }, integers[0].integer);
-  return largestInt;
+  let largest = integers[0];
+  integers.forEach(int => {
+    if(int > largest)
+      largest = int;
+  });
+  return largest;
 }
 
 class Counter {
@@ -58,12 +60,11 @@ class Counter {
   constructor(initialNumber) {
     // ✨ initialize whatever properties are needed
 
-      this.initialNumber = initialNumber;
-      this.count = initialNumber + 1;
+    this.currentVal = initialNumber + 1;
     }
   
     
-    }
+    
   
   
   /**
@@ -78,41 +79,45 @@ class Counter {
    * counter.countDown() // returns 0
    * counter.countDown() // returns 0
    */
-  countDown() {
-    if (this.count > this.initialNumber) {
-      this.count--;
-      return this.count
-    } else if (this.count > 0) {
-      this.count--;
-      return this.count;
-    } else {
-      return 0;
+  
+   countDown() {
+    // ✨ implement
+    this.currentVal = this.currentVal - 1; 
+    return this.currentVal < 0 ? 0 : this.currentVal;
+  }
+}
+
+  
+   class Seasons {
+    /**
+     * [Exercise 5A] Seasons creates a seasons object
+     */
+    constructor() {
+      // ✨ initialize whatever properties are needed
+      this.seasons = ['spring', 'summer', 'fall', 'winter'];
+      this.currSeason = 0;
+    }
+  
+    /**
+     * [Exercise 5B] Seasons.prototype.next returns the next season
+     * @returns {string} - the next season starting with "summer"
+     *
+     * EXAMPLE
+     * const seasons = new Seasons()
+     * seasons.next() // returns "summer"
+     * seasons.next() // returns "fall"
+     * seasons.next() // returns "winter"
+     * seasons.next() // returns "spring"
+     * seasons.next() // returns "summer"
+     */
+    next() {
+      // ✨ implement
+      if(this.currSeason >= 3)
+        this.currSeason = -1;
+      return this.seasons[this.currSeason += 1];
     }
   }
   
-    next() {
-      switch(this.season) {
-        case 'spring':
-          this.season = 'summer';
-          break;
-        case 'summer':
-          this.season = 'fall';
-          break;
-        case 'fall':
-          this.season = 'winter';
-          break;
-        case 'winter':
-          this.season = 'spring';
-          break;
-        default:
-          console.log('something went wrong in seasons.next');
-      }
-      return this.season;
-    }
-  
-    
-      
-    
   
 
 
@@ -147,18 +152,17 @@ class Car {
    * focus.drive(200) // returns 600 (ran out of gas after 100 miles)
    */
   drive(distance) {
-    if (this.milesToEmpty > 0 && this.milesToEmpty >= distance) {
-      this.odometer += distance;
-      this.milesToEmpty -= distance;
-      this.tank = this.milesToEmpty / this.mpg;
-    } else if (this.milesToEmpty > 0 && this.milesToEmpty < distance) {
-      this.odometer += this.milesToEmpty;
-      this.milesToEmpty = 0;
-      this.tank = 0;
-    } else {
-      console.log("The car is out of gas");
+    let gallsToConsume = distance / this.mpg;
+    if(this.tank - gallsToConsume >= 0){
+      this.tank -= gallsToConsume;
+      return (this.odometer += distance)
     }
-    return this.odometer;
+    else{
+      gallsToConsume = this.tank;
+      const newDist = gallsToConsume * this.mpg;
+      this.tank = 0;
+      return (this.odometer += newDist);
+    }
   }
 
   /**
@@ -172,17 +176,13 @@ class Car {
    * focus.drive(1) // returns 600 (no distance driven as tank is empty)
    * focus.refuel(99) // returns 600 (tank only holds 20)
    */
-  refuel(gallons) {
-    if (gallons < 0) {
-      return "Invalid amount of gas"
-    } else if (gallons > this.tankSize || gallons > (this.tankSize - this.tank)) {
-      this.tank = this.tankSize;
-      this.milesToEmpty = this.tank * this.mpg;
-    } else {
-      this.tank += gallons;
-      this.milesToEmpty = this.tank * this.mpg;
-    }
-    return this.milesToEmpty;
+   refuel(gallons) {
+    // ✨ implement
+    this.tank += gallons;
+    if(this.tank > this.maxTankCapacity)
+      this.tank = this.maxTankCapacity;
+    return(this.tank * this.mpg)
+
   }
   }
 
@@ -206,25 +206,21 @@ class Car {
  *    // error.message is "number must be a number"
  * })
  */
-function isEvenNumberAsync(number) {
-  const type = typeof number;
-  const error = {};
-  if (type !== "number" || isNaN(number)) {
-    error.message = 'number must be a number';
-    throw error;
-  } else {
-    const result = (number % 2  === 0) ? true : false;
-    return result;
-  }
+ function isEvenNumberAsync(number) {
+  // ✨ implement
+  return new Promise((resolve, reject) => {
+    if(typeof number === 'number'){
+      if(number % 2 === 0)
+        resolve(true);
+      else 
+        resolve(false);
+    }
+    else 
+      reject('number must be a number')
+  })
 }
 
-isEvenNumberAsync(NaN)
-  .then(result => {
-    console.log(result);
-  })
-  .catch(error => {
-    console.log(error.message);
-  })
+
 
 
 module.exports = {
