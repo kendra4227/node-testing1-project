@@ -8,6 +8,13 @@
  */
 function trimProperties(obj) {
   // ✨ implement
+  const newObj = {...obj};
+  const keys = Object.keys(newObj);
+  keys.forEach(key =>{
+    newObj[key] = newObj[key].trim()
+  });
+  return newObj;
+  
 }
 
 /**
@@ -20,6 +27,11 @@ function trimProperties(obj) {
  */
 function trimPropertiesMutation(obj) {
   // ✨ implement
+  const keys = Object.keys(obj);
+  keys.forEach(key =>{
+    object[key] = obj[key].trim();
+  })
+  return obj;
 }
 
 /**
@@ -32,6 +44,10 @@ function trimPropertiesMutation(obj) {
  */
 function findLargestInteger(integers) {
   // ✨ implement
+  const largestInt = integers.reduce((highNum, currentNumObj) => {
+    return Math.max(highNum, currentNumObj.integer);
+  }, integers[0].integer);
+  return largestInt;
 }
 
 class Counter {
@@ -41,8 +57,15 @@ class Counter {
    */
   constructor(initialNumber) {
     // ✨ initialize whatever properties are needed
-  }
 
+      this.initialNumber = initialNumber;
+      this.count = initialNumber + 1;
+    }
+  
+    
+    }
+  
+  
   /**
    * [Exercise 4B] Counter.prototype.countDown counts down to zero
    * @returns {number} - the next count, does not go below zero
@@ -56,34 +79,42 @@ class Counter {
    * counter.countDown() // returns 0
    */
   countDown() {
-    // ✨ implement
+    if (this.count > this.initialNumber) {
+      this.count--;
+      return this.count
+    } else if (this.count > 0) {
+      this.count--;
+      return this.count;
+    } else {
+      return 0;
+    }
   }
-}
+  
+    next() {
+      switch(this.season) {
+        case 'spring':
+          this.season = 'summer';
+          break;
+        case 'summer':
+          this.season = 'fall';
+          break;
+        case 'fall':
+          this.season = 'winter';
+          break;
+        case 'winter':
+          this.season = 'spring';
+          break;
+        default:
+          console.log('something went wrong in seasons.next');
+      }
+      return this.season;
+    }
+  
+    
+      
+    
+  
 
-class Seasons {
-  /**
-   * [Exercise 5A] Seasons creates a seasons object
-   */
-  constructor() {
-    // ✨ initialize whatever properties are needed
-  }
-
-  /**
-   * [Exercise 5B] Seasons.prototype.next returns the next season
-   * @returns {string} - the next season starting with "summer"
-   *
-   * EXAMPLE
-   * const seasons = new Seasons()
-   * seasons.next() // returns "summer"
-   * seasons.next() // returns "fall"
-   * seasons.next() // returns "winter"
-   * seasons.next() // returns "spring"
-   * seasons.next() // returns "summer"
-   */
-  next() {
-    // ✨ implement
-  }
-}
 
 class Car {
   /**
@@ -95,6 +126,10 @@ class Car {
   constructor(name, tankSize, mpg) {
     this.odometer = 0 // car initilizes with zero miles
     this.tank = tankSize // car initiazes full of gas
+    this.mpg = mpg;
+    this.name = name;
+    this.milesToEmpty = tankSize * mpg;
+
     // ✨ initialize whatever other properties are needed
   }
 
@@ -112,7 +147,18 @@ class Car {
    * focus.drive(200) // returns 600 (ran out of gas after 100 miles)
    */
   drive(distance) {
-    // ✨ implement
+    if (this.milesToEmpty > 0 && this.milesToEmpty >= distance) {
+      this.odometer += distance;
+      this.milesToEmpty -= distance;
+      this.tank = this.milesToEmpty / this.mpg;
+    } else if (this.milesToEmpty > 0 && this.milesToEmpty < distance) {
+      this.odometer += this.milesToEmpty;
+      this.milesToEmpty = 0;
+      this.tank = 0;
+    } else {
+      console.log("The car is out of gas");
+    }
+    return this.odometer;
   }
 
   /**
@@ -127,9 +173,19 @@ class Car {
    * focus.refuel(99) // returns 600 (tank only holds 20)
    */
   refuel(gallons) {
-    // ✨ implement
+    if (gallons < 0) {
+      return "Invalid amount of gas"
+    } else if (gallons > this.tankSize || gallons > (this.tankSize - this.tank)) {
+      this.tank = this.tankSize;
+      this.milesToEmpty = this.tank * this.mpg;
+    } else {
+      this.tank += gallons;
+      this.milesToEmpty = this.tank * this.mpg;
+    }
+    return this.milesToEmpty;
   }
-}
+  }
+
 
 /**
  * [Exercise 7] Asynchronously resolves whether a number is even
@@ -151,8 +207,25 @@ class Car {
  * })
  */
 function isEvenNumberAsync(number) {
-  // ✨ implement
+  const type = typeof number;
+  const error = {};
+  if (type !== "number" || isNaN(number)) {
+    error.message = 'number must be a number';
+    throw error;
+  } else {
+    const result = (number % 2  === 0) ? true : false;
+    return result;
+  }
 }
+
+isEvenNumberAsync(NaN)
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.log(error.message);
+  })
+
 
 module.exports = {
   trimProperties,
